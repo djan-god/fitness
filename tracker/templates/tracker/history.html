@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>Full Weight History</h3><p style="margin-top:1rem;">
+  <a href="{% url 'tracker:dashboard' %}">Back to dashboard</a>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Weight</th>
+      <th>BMI</th>
+      <th>Age at record</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in weights %}
+      <tr>
+        <td>{{ e.recorded_at|date:"LONG_DATE_FORMAT" }}</td>
+        <td>{{ e.stones }}st {{ e.pounds }}lb</td>
+        <td>{% if e.bmi %}{{ e.bmi }}{% else %}-{% endif %}</td>
+        <td>{% if e.age_at_record %}{{ e.age_at_record }}{% else %}-{% endif %}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="4">No entries yet</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

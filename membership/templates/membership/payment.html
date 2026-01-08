@@ -1,0 +1,41 @@
+{# membership/templates/membership/payment.html #}
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="membership-card">
+  <h2 class="section-heading">Confirm Payment</h2>
+
+  <div class="payment-summary">
+    <div class="plan-info">
+      <p class="plan-name">Membership Plan: {{ duration }}</p>
+      <p class="plan-duration">Amount: £{{ amount }}</p>
+    </div>
+    <div class="price-tag">£{{ amount }}</div>
+  </div>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="payment-method">
+      <label for="method">Payment Method:</label>
+      <select name="method" id="method" class="payment-method-select" required>
+        <option value="Stripe">Stripe</option>
+        <option value="PayPal">PayPal</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+      </select>
+    </div>
+
+    <div class="payment-actions">
+      <button type="submit" class="form-submit">Pay Now</button>
+    </div>
+  </form>
+
+  {% if messages %}
+    <ul class="messages message-list">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}

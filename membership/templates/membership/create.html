@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="membership-card">
+  <h2 class="section-heading">Select Membership Duration</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    <div class="payment-method">
+      <label for="duration">Choose a plan:</label>
+      <select name="duration" id="duration" class="membership-select" required>
+        <option value="1M">1 Month</option>
+        <option value="3M">3 Months</option>
+        <option value="6M">6 Months</option>
+        <option value="1Y">1 Year</option>
+      </select>
+    </div>
+
+    <p class="price-display">Price: £<span id="price">0.00</span></p>
+    <input type="hidden" name="amount" id="amount" value="">
+
+    <div class="payment-actions">
+      <button type="submit" class="form-submit">Continue to Payment</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const priceMap = {
+    '1M': {{ price_map.1M|default:"'9.99'" }},
+    '3M': {{ price_map.3M|default:"'27.99'" }},
+    '6M': {{ price_map.6M|default:"'49.99'" }},
+    '1Y': {{ price_map.1Y|default:"'89.99'" }},
+  };
+
+  function updatePrice() {
+    const select = document.getElementById('duration');
+    const choice = select.value;
+    const price = priceMap[choice];
+    document.getElementById('price').textContent = parseFloat(price).toFixed(2);
+    document.getElementById('amount').value = parseFloat(price).toFixed(2);
+  }
+
+  document.getElementById('duration').addEventListener('change', updatePrice);
+  updatePrice();
+</script>
+{% endblock %}

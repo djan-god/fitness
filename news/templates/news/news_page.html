@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block title %} 
+    News - FitNova app 
+{% endblock %}
+
+{% block content%}
+<br>
+    <section>
+      <h2> Welcome to FitNova  </h2>
+      <br>
+      <p> Here you can stay updated with the latest FitNova news and articles on fitness, health, and wellness. Explore our curated content to help you achieve your fitness goals and lead a healthier lifestyle. </p>
+    </section>
+  <div class="header-box">
+    <h2> News </h2>
+   </div>
+
+
+<section class="news-article-list">
+  {% for article in news_articles %}
+    <article class="newsArticle">
+      {% if article.image %}  
+      <img src="{{ article.image.url }}" alt="{{ article.title }}">
+        {% endif %}
+      <div class="news-article-summary">
+        <h3>{{ article.title }}</h3> <p>{{ article.published_date|date:"F j, Y" }}</p>
+        <p>{{ article.briefSumary }}</p>
+        <a href="{% url 'news:article_detail' article.id %}">Click here to read more</a>
+      </div>
+    </article>
+  {% endfor %}
+</section>
+
+{%endblock%}
+    
+

@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% block content %}
+<h3>Body Tracker</h3>
+
+<div class="tracker-grid" style="display:flex; gap:2rem;">
+  <div class="left-col" style="flex:1;">
+    {% if age_now %}
+      <p><strong>Age</strong>: {{ age_now }} years</p>
+    {% else %}
+      <p><strong>Age</strong>: not available (date of birth missing)</p>
+    {% endif %}
+
+    <hr>
+    <h4>Record weight</h4>
+    <form method="post">
+      {% csrf_token %}
+      {{ wform.as_p }}
+      <button type="submit" name="save_weight">Record weight</button>
+    </form>
+
+    {% if latest %}
+      <p><strong>Latest weight</strong>: {{ latest.stones }}st {{ latest.pounds }}lb recorded {{ latest.recorded_at|date:"SHORT_DATE_FORMAT" }}</p>
+      <p><strong>Latest BMI</strong>: {% if latest.bmi %}{{ latest.bmi }}{% else %}-{% endif %}</p>
+    {% endif %}
+
+    {% if goal and distance_kg is not None %}
+      <p><strong>Goal</strong>: {{ goal.target_stones }}st {{ goal.target_pounds }}lb</p>
+      <p><strong>Distance to goal</strong>: {{ distance_kg }} kg</p>
+    {% endif %}
+
+    <hr>
+    <h4>Update height</h4>
+    <form method="post">
+      {% csrf_token %}
+      {{ hform.as_p }}
+      <button type="submit" name="save_height">Update height</button>
+    </form>
+
+    <hr>
+    <h4>Set goal</h4>
+    <form method="post">
+      {% csrf_token %}
+      {{ gform.as_p }}
+      <button type="submit" name="save_goal">Save goal</button>
+    </form>
+  </div>
+
+  <div class="right-col" style="flex:2;">
+    <h4>Weight history and BMI</h4>   <a href="{% url 'tracker:history' %}" class="btn">View full history</a>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Weight</th><th>BMI</th><th>Age at record</th></tr>
+      </thead>
+      <tbody>
+        {% for e in weights|slice:":3" %}
+          <tr>
+            <td>{{ e.recorded_at|date:"SHORT_DATE_FORMAT" }}</td>
+            <td>{{ e.stones }}st {{ e.pounds }}lb</td>
+            <td>{% if e.bmi %}{{ e.bmi }}{% else %}-{% endif %}</td>
+            <td>{% if e.age_at_record %}{{ e.age_at_record }}{% else %}-{% endif %}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">No entries yet</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+       
+    <hr>
+    <h4>BMI over time</h4>
+    <canvas id="bmiChart" width="600" height="300"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const dates = {{ chart_dates|safe }};
+      const bmis = {{ chart_bmis|safe }};
+      const ctx = document.getElementById('bmiChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: dates,
+          datasets: [{
+            label: 'BMI',
+            data: bmis,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            fill: true,
+            tension: 0.2,
+            pointRadius: 3,
+            spanGaps: true
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: false } }
+        }
+      });
+    </script>
+  </div>
+</div>
+{% endblock %}

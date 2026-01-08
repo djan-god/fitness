@@ -1,0 +1,18 @@
+
+{% extends "layout.html" %}
+{% load static %}
+{% block content %}
+<form method="post" class="account-form">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <p>
+    <label for="{{ form.username.id_for_label }}">Username</label><br>
+    {{ form.username }}
+  </p>
+  <p>
+    <label for="{{ form.password.id_for_label }}">Password</label><br>
+    {{ form.password }}
+  </p>
+  <button type="submit">Log in</button>
+</form>
+{% endblock %}

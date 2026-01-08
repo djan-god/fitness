@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block content %}
+<div class="membership-card">
+  <h2 class="section-heading">Payment History</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Method</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for payment in payments %}
+        <tr>
+          <td>{{ payment.date }}</td>
+          <td>£{{ payment.amount }}</td>
+          <td>{{ payment.method }}</td>
+          <td>
+            <span class="status-badge {{ payment.status }}">{{ payment.status }}</span>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4">No payments found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

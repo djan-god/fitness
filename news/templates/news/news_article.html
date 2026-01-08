@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+{{newsArticle.title}} - FitNova app
+{% endblock %}
+
+{% block content %}
+    <section>
+        <h1>{{ newsArticle.title }}</h1>
+        <br>
+         <p>this article was published on the {{ newsArticle.published_date }}</p>
+         <br>
+        <p>{{ newsArticle.content }}</p>
+        <br>
+     {% if newsArticle.image %}  
+        <img src="{{ newsArticle.image.url }}" alt="{{ newsArticle.title }}">
+        {% endif %}  
+    </section>
+{% endblock %}

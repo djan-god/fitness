@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block content %}
+<div class="membership-info">
+  <h2 class="section-heading">Your Membership</h2>
+
+  {% if membership %}
+    <p>Status: {{ membership.status }}</p>
+    <p>Start Date: {{ membership.start_date }}</p>
+    <p>End Date: {{ membership.end_date }}</p>
+    <p>Duration: {{ membership.get_duration_display }}</p>
+
+    
+    </form>
+
+  {% else %}
+    <p>You don’t have an active membership.
+    please create a membership to view features such as the Body Tracker</p>
+    <br>
+    <a href="{% url 'create_membership' %}" class="form-ghost">Start a Membership</a>
+  {% endif %}
+</div>
+{% endblock %}
